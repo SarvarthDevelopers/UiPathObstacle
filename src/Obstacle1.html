@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Automation Obstacle: Again and again and again</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #191919; /* UiPath Dark Background */
+            color: #e0e0e0;
+        }
+
+        /* Custom UiPath Branding Colors */
+        .uipath-orange-bg {
+            background-color: #FA4616;
+        }
+        .uipath-orange-text {
+            color: #FA4616;
+        }
+        .uipath-orange-border {
+            border-color: #FA4616;
+        }
+        
+        .uipath-card {
+            background-color: #252525;
+            border: 1px solid #333;
+        }
+
+        .btn-uipath {
+            background-color: #FA4616;
+            border: 1px solid #FA4616;
+            color: white;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .btn-uipath:hover {
+            background-color: #d63b12;
+            border-color: #d63b12;
+        }
+
+        /* Keep existing animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #FA4616;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation Bar (White as per reference image) -->
+    <nav class="bg-white border-b border-gray-200 py-3 px-4 md:px-12 shadow-sm flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <!-- UiPath Official Company Logo -->
+            <div class="flex items-center gap-2 select-none cursor-pointer">
+    <!-- Replace 'your-image-name.png' with the actual name of your file -->
+    <img src="C:\Users\suman\Downloads\uipathlogo.png" alt="UiPath Logo" width="138" height="32">
+</div>
+            <div class="hidden md:block h-6 w-px bg-gray-300 mx-4"></div>
+            <span class="text-gray-500 font-light hidden md:inline-block">Obstacle Course</span>
+        </div>
+        
+        <!-- Navigation links removed -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-12 max-w-6xl">
+        
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-4xl font-bold text-white mb-4">Test Automation Obstacle</h1>
+            <h2 class="text-xl text-gray-400 font-light">Again and again and again</h2>
+            <!-- Full Orange Line -->
+            <div class="mt-4 h-1 w-full uipath-orange-bg rounded-full overflow-hidden"></div>
+        </div>
+
+        <!-- Game Area -->
+        <div class="flex justify-center">
+            
+            <!-- Left Column: Obstacle -->
+            <div class="w-full max-w-3xl space-y-6">
+                
+                <div class="uipath-card p-8 rounded-lg relative shadow-lg">
+                    <!-- Status Bar -->
+                    <div class="flex justify-between items-center mb-6 text-sm text-gray-400 border-b border-gray-700 pb-4">
+                        <span class="font-semibold text-white">Can you do this one?</span>
+                        <div id="timer" class="font-mono bg-gray-800 px-3 py-1 rounded border border-gray-700 text-uipath-orange-text">
+                            Completed in: <span id="time-display">00 : 00</span>
+                        </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="mb-8">
+                        <div class="flex items-center space-x-4 mb-3">
+                            <h2 class="text-2xl font-bold text-white">Obstacle #1</h2>
+                            <span class="px-2 py-1 bg-gray-700 text-white text-xs font-bold uppercase rounded border border-gray-600">Medium</span>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed">
+                            In order to complete this obstacle you need to click the button labeled <code class="bg-gray-800 px-2 py-0.5 rounded text-[#FA4616] font-mono border border-gray-700">'Click me'</code>. 
+                            After a few clicks the button will change to <code class="bg-gray-800 px-2 py-0.5 rounded text-green-400 font-mono border border-gray-700">'Enough'</code>. 
+                            Click that button to finish the exercise.
+                        </p>
+                    </div>
+
+                    <!-- Interaction Zone -->
+                    <div class="bg-[#1e1e1e] p-12 rounded-lg border border-gray-700 flex flex-col items-center justify-center space-y-8 min-h-[300px]">
+                        
+                        <div id="success-message" class="hidden text-center animate-bounce">
+                            <div class="text-6xl mb-4">🎉</div>
+                            <h3 class="text-3xl font-bold text-white mb-2">Good Job!</h3>
+                            <p class="text-gray-400">You solved the obstacle.</p>
+                        </div>
+
+                        <button id="action-btn" class="btn-uipath px-10 py-4 text-xl font-bold rounded shadow-lg active:scale-95 select-none tracking-wide">
+                            Click Me
+                        </button>
+                        
+                        <div id="click-counter" class="text-xs text-gray-600 opacity-0 hover:opacity-100 transition-opacity cursor-default">
+                            Debug: <span id="debug-count">0</span> / <span id="debug-target">?</span>
+                        </div>
+
+                    </div>
+
+                    <!-- Reset -->
+                    <div class="mt-8 text-center">
+                        <a href="#" onclick="resetObstacle(); return false;" class="text-sm text-gray-400 hover:text-[#FA4616] transition-colors flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            I messed up - please let me try again.
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#111] border-t border-gray-800 mt-12 py-10">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p class="mt-6 text-xs text-gray-600">© 2025 UiPath. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Game State
+        let clickCount = 0;
+        let targetClicks = 0;
+        let isComplete = false;
+        let startTime = null;
+        let timerInterval = null;
+
+        // Elements
+        const btn = document.getElementById('action-btn');
+        const timerDisplay = document.getElementById('time-display');
+        const successMsg = document.getElementById('success-message');
+        const debugCount = document.getElementById('debug-count');
+        const debugTarget = document.getElementById('debug-target');
+
+        function init() {
+            // Random number between 10 and 25 to simulate "Again and again"
+            targetClicks = Math.floor(Math.random() * 15) + 10;
+            clickCount = 0;
+            isComplete = false;
+            
+            btn.innerText = "Click Me";
+            // Reset to Orange UiPath style
+            btn.className = "btn-uipath px-10 py-4 text-xl font-bold rounded shadow-lg active:scale-95 select-none tracking-wide"; 
+            btn.style.display = "block";
+            successMsg.classList.add('hidden');
+            
+            debugCount.innerText = clickCount;
+            debugTarget.innerText = targetClicks;
+
+            startTimer();
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        function updateTimer() {
+            const now = Date.now();
+            const diff = Math.floor((now - startTime) / 1000);
+            const minutes = Math.floor(diff / 60).toString().padStart(2, '0');
+            const seconds = (diff % 60).toString().padStart(2, '0');
+            timerDisplay.innerText = `${minutes} : ${seconds}`;
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                // Orange confetti for UiPath
+                confetti.style.backgroundColor = Math.random() > 0.5 ? '#FA4616' : '#ffffff'; 
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        function resetObstacle() {
+            stopTimer();
+            timerDisplay.innerText = "00 : 00";
+            init();
+        }
+
+        btn.addEventListener('click', () => {
+            if (isComplete) return;
+
+            if (btn.innerText === "Enough") {
+                isComplete = true;
+                stopTimer();
+                btn.style.display = "none";
+                successMsg.classList.remove('hidden');
+                createConfetti();
+                return;
+            }
+
+            clickCount++;
+            debugCount.innerText = clickCount;
+
+            if (clickCount >= targetClicks) {
+                btn.innerText = "Enough";
+                // Keep orange or switch? Switch to Green for clear success indicator, but styled for dark mode.
+                btn.className = "px-10 py-4 text-xl font-bold rounded shadow-lg active:scale-95 select-none tracking-wide bg-green-600 hover:bg-green-500 text-white border border-green-500 transition-all";
+            }
+        });
+
+        window.onload = init;
+
+    </script>
+</body>
+</html>
